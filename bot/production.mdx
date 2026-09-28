@@ -3,6 +3,16 @@ title: "Run a bot in production"
 description: "Operate automated execution with visibility and a fast stop path"
 ---
 
+## Configure bot credentials
+
+Never paste a bot token into source code, documentation, chat messages, or client-side code. Store it as a server-side environment variable instead.
+
+```bash
+TELEGRAM_BOT_TOKEN=<your-bot-token>
+```
+
+Use the token only from your server-side bot process. Do not expose it through `NEXT_PUBLIC_*` variables, logs, browser requests, or error messages. If a token has been shared publicly, revoke it in BotFather and issue a new one before continuing.
+
 ## Wallet isolation
 
 Use a dedicated wallet per strategy or risk domain. Keep the signing process separate from your web application. Restrict who can change strategy parameters and require review for key or limit changes.
