@@ -1,0 +1,21 @@
+---
+title: "Monitor tokens and routes"
+description: "Keep market-aware interfaces and bots resilient"
+---
+
+A monitor should collect data at a deliberate cadence, record freshness, and degrade gracefully when an endpoint or RPC is unavailable.
+
+## Monitoring loop
+
+<Steps>
+  <Step title="Load the allowlist">Start from the mints your product supports. Do not automatically trade every discovered token.</Step>
+  <Step title="Fetch metadata and prices">Cache descriptive data and timestamp every observation.</Step>
+  <Step title="Request a route when needed">Use quotes for execution decisions instead of deriving output from an indicative price.</Step>
+  <Step title="Emit health signals">Track latency, errors, stale data, and missing metadata for each worker.</Step>
+</Steps>
+
+## Alert thresholds
+
+Choose thresholds that fit your product. Useful alerts include stale observations, repeated `429` responses, sudden price-impact changes, and divergence between expected and realized output.
+
+<Info>Monitoring should inform a decision, not silently become a trading strategy. Keep automation behind a separate risk gate.</Info>

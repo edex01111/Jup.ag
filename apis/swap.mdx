@@ -1,0 +1,49 @@
+---
+title: "Swap API"
+description: "Find a route and prepare a Solana swap transaction"
+---
+
+The Swap API is the flexible path for applications that want control over route selection, transaction handling, and signing.
+
+## Quote
+
+`GET https://api.jup.ag/swap/v1/quote`
+
+| Parameter | Required | Description |
+| --- | --- | --- |
+| `inputMint` | Yes | Input token mint address. |
+| `outputMint` | Yes | Output token mint address. |
+| `amount` | Yes | Input amount in the smallest unit. |
+| `slippageBps` | No | Maximum tolerated slippage in basis points. |
+| `restrictIntermediateTokens` | No | Limit routes to more reliable intermediate tokens. |
+
+## Build a swap
+
+`POST https://api.jup.ag/swap/v1/swap`
+
+Send the quote response and the user's `userPublicKey`. The response includes a base64 serialized transaction. Deserialize it, sign locally, and submit it to Solana.
+
+<CodeGroup>
+
+```ts TypeScript
+const quote = await fetch(quoteUrl, { headers }).then((r) => r.json())
+const swap = await fetch("https://api.jup.ag/swap/v1/swap", {
+  method: "POST",
+  headers: { ...headers, "Content-Type": "application/json" },
+  body: JSON.stringify({ quoteResponse: quote, userPublicKey }),
+}).then((r) => r.json())
+```
+
+```json Response
+{
+  "swapTransaction": "base64-encoded-transaction",
+  "lastValidBlockHeight": 265000000,
+  "prioritizationFeeLamports": 50000
+}
+```
+
+</CodeGroup>
+
+<Info>
+  Always simulate or send the transaction promptly. Solana transactions expire after their recent blockhash window.
+</Info>

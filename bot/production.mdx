@@ -1,0 +1,36 @@
+---
+title: "Run a bot in production"
+description: "Operate automated execution with visibility and a fast stop path"
+---
+
+## Wallet isolation
+
+Use a dedicated wallet per strategy or risk domain. Keep the signing process separate from your web application. Restrict who can change strategy parameters and require review for key or limit changes.
+
+## Observability
+
+Record a structured event for every decision:
+
+- signal timestamp and source
+- intent ID and strategy version
+- quote request and selected route
+- risk checks and rejection reason
+- transaction signature and confirmation status
+- realized output and effective price
+
+Set alerts for repeated quote failures, rising price impact, confirmation delays, balance changes, and daily loss thresholds.
+
+## Kill switches
+
+Provide both an operator-controlled stop and an automatic circuit breaker. The stop should prevent new submissions while allowing reconciliation of already-submitted transactions.
+
+<Steps>
+  <Step title="Pause submissions">Disable the executor without deleting state.</Step>
+  <Step title="Reconcile">Resolve unknown transactions and update balances.</Step>
+  <Step title="Review">Inspect the latest events, routes, limits, and code version.</Step>
+  <Step title="Resume gradually">Restart in dry-run or low-notional mode before restoring normal limits.</Step>
+</Steps>
+
+<Warning>
+  Automated trading is high risk. Jupiter does not guarantee fills, prices, uptime, or profitability. You are responsible for your implementation and its consequences.
+</Warning>

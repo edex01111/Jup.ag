@@ -1,0 +1,29 @@
+---
+title: "Quote and execute a swap"
+description: "A complete request lifecycle for a Jupiter integration"
+---
+
+## 1. Request a quote
+
+Use raw integer amounts, not display amounts. For example, one SOL is represented according to SOL's decimals.
+
+```ts
+const quote = await fetch(
+  `${baseUrl}/swap/v1/quote?inputMint=${inputMint}&outputMint=${outputMint}&amount=${amount}&slippageBps=${slippageBps}`,
+  { headers: { "x-api-key": apiKey } },
+).then((response) => response.json())
+```
+
+## 2. Show the decision
+
+Before signing, show the user input amount, expected output, minimum output, price impact, route, and network fee. Let the user reject the transaction.
+
+## 3. Prepare and sign
+
+Send the quote response to the swap endpoint with the user's public key. Deserialize the returned transaction and sign it using the wallet adapter or isolated bot signer.
+
+## 4. Confirm and reconcile
+
+Persist the signature, poll confirmation, and refresh balances after confirmation. Treat a timeout as unknown—not successful—and reconcile before retrying.
+
+<Warning>Never blindly retry a swap submission. A request can time out after the chain accepted the transaction.</Warning>

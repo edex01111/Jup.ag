@@ -1,0 +1,33 @@
+---
+title: "Authentication and API keys"
+description: "Protect your integration and scale requests responsibly"
+---
+
+Use an API key for authenticated Jupiter API requests. Keep keys on your server and pass them through an environment variable.
+
+```bash
+export JUPITER_API_KEY="your-key"
+```
+
+```ts
+const response = await fetch("https://api.jup.ag/swap/v1/quote?...", {
+  headers: { "x-api-key": process.env.JUPITER_API_KEY! },
+})
+```
+
+<Warning>
+  Never put a Jupiter API key in browser JavaScript, mobile bundles, public repositories, or client-visible logs.
+</Warning>
+
+## Production checklist
+
+- Store secrets in your deployment provider's secret manager.
+- Rotate keys if they appear in logs or commits.
+- Add request timeouts and exponential backoff for transient failures.
+- Cache token metadata and avoid polling endpoints unnecessarily.
+- Track response status, latency, route, and transaction signature.
+- Set explicit limits for automated trading notional and frequency.
+
+## Rate limits
+
+Design your client to handle `429` responses. Respect the `Retry-After` header when present and use jittered backoff so multiple workers do not retry together.

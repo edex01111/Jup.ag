@@ -1,47 +1,47 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Build your first swap"
+description: "Go from zero to a quoted Jupiter swap in minutes"
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
-
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+Jupiter APIs give you the building blocks for Solana trading: quotes, routes, execution, token data, and pricing.
 
 ## Prerequisites
 
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
+- A server-side runtime such as Node.js 18+
+- A Solana wallet for signing transactions
+- A Jupiter API key for production traffic
 
 ## Get started
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
-
+  <Step title="Create a project">
     ```bash
-    npm install your-package
+    mkdir jupiter-demo && cd jupiter-demo
+    npm init -y
+    npm install @solana/web3.js
     ```
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+  <Step title="Request a quote">
+    Use the Swap API to find a route. Keep amounts in the token's smallest unit.
 
     ```bash
-    your-cli init
+    curl "https://api.jup.ag/swap/v1/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=10000000&slippageBps=50"
     ```
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
-
-    ```bash
-    your-cli start
-    ```
+  <Step title="Build and sign">
+    Send the selected quote to the swap endpoint, deserialize the returned transaction, sign it locally, and send it to your Solana RPC.
   </Step>
 </Steps>
 
 <Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
-
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
+  Start with `slippageBps=50` (0.50%) only as a development example. Choose slippage based on the asset, route, and market conditions.
 </Tip>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Quote and swap" icon="repeat" href="/guides/quote-and-swap">See the complete request lifecycle.</Card>
+  <Card title="Authentication" icon="key" href="/authentication">Configure API keys and keep them server-side.</Card>
+  <Card title="Build a bot" icon="robot" href="/bot/overview">Turn signals into controlled execution.</Card>
+  <Card title="Ultra API" icon="bolt" href="/apis/ultra">Use an execution-first integration.</Card>
+</CardGroup>
