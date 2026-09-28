@@ -1,0 +1,32 @@
+---
+title: "Events and webhooks"
+description: "Design reliable status updates around asynchronous execution"
+---
+
+Use an event boundary between execution and your UI or downstream services. Events should be idempotent and safe to process more than once.
+
+## Event contract
+
+Include an event ID, type, creation timestamp, intent ID, transaction signature when available, and a versioned payload.
+
+```json
+{
+  "id": "evt_123",
+  "type": "trade.confirmed",
+  "version": 1,
+  "intentId": "intent_456",
+  "signature": "...",
+  "createdAt": "2026-09-28T12:00:00Z"
+}
+```
+
+## Delivery rules
+
+- Verify webhook signatures before processing.
+- Return a fast success response after durable enqueueing.
+- Deduplicate by event ID.
+- Retry with exponential backoff.
+- Keep a dead-letter queue for events that need operator review.
+- Never expose signing keys or API secrets in an event payload.
+
+<Warning>Do not treat a webhook as proof of chain finality unless its contract explicitly guarantees the confirmation level your product needs.</Warning>

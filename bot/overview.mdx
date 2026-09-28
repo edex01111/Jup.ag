@@ -1,0 +1,48 @@
+---
+title: "Trading bot architecture"
+description: "Build an automated trading system that fails safely"
+---
+
+A production trading bot is more than a loop that calls an endpoint. Separate signal generation, risk decisions, quote selection, execution, and observability so each part can be tested and stopped independently.
+
+## Reference architecture
+
+```text
+Market data → Signal engine → Risk gate → Quote engine → Signer → Executor
+      ↓             ↓             ↓           ↓            ↓
+   Storage       Audit log    Kill switch   Metrics    Confirmation
+```
+
+<CardGroup cols={3}>
+  <Card title="Signal" icon="wave-pulse">Decide when a market condition is interesting.</Card>
+  <Card title="Risk" icon="shield-check">Decide whether the trade is allowed.</Card>
+  <Card title="Execution" icon="bolt">Route, sign, submit, and confirm.</Card>
+</CardGroup>
+
+## The safe order lifecycle
+
+<Steps>
+  <Step title="Observe">
+    Read fresh data and record the timestamp. Do not trade on stale signals.
+  </Step>
+  <Step title="Gate">
+    Check position limits, daily loss limits, token allowlists, balance, and cooldowns.
+  </Step>
+  <Step title="Quote">
+    Request a route and reject it if price impact, slippage, or expected output violates policy.
+  </Step>
+  <Step title="Execute">
+    Sign with an isolated hot wallet, submit once, and persist the transaction signature.
+  </Step>
+  <Step title="Confirm">
+    Poll confirmation, reconcile balances, and classify the result as filled, failed, or unknown.
+  </Step>
+</Steps>
+
+<Warning>
+  Do not give a bot access to a wallet holding funds you cannot afford to lose. Use a dedicated wallet with a capped balance and a manual kill switch.
+</Warning>
+
+## Start here
+
+Continue with [strategy design](/bot/strategy), then review [production operations](/bot/production).

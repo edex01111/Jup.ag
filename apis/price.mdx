@@ -1,0 +1,21 @@
+---
+title: "Price API"
+description: "Read token prices for interfaces and automation"
+---
+
+Use price data for portfolio displays, route context, alerts, and strategy inputs. Treat every price as time-bound market information.
+
+## Request prices
+
+`GET https://api.jup.ag/price/v2`
+
+Pass token mint addresses in the `ids` query parameter. Cache responses briefly for UI display, but avoid using stale prices as an execution guarantee.
+
+## Production notes
+
+- Display the price timestamp in interfaces where freshness matters.
+- Handle missing or illiquid tokens explicitly.
+- Do not calculate execution output from a price endpoint; request a route instead.
+- Apply decimal conversion only after reading the token's metadata.
+
+<Info>Prices are indicative. A swap quote is the source of truth for expected execution output.</Info>

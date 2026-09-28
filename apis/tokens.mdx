@@ -1,0 +1,19 @@
+---
+title: "Tokens API"
+description: "Discover token metadata for Solana applications"
+---
+
+Token metadata powers search, icons, decimals, verification labels, and portfolio views.
+
+## Use metadata safely
+
+Treat token lists as untrusted input. Validate mint addresses, show decimals correctly, and make it clear when an asset is unverified or has limited liquidity.
+
+## Recommended cache
+
+Cache metadata by mint with an explicit refresh policy. Keep the last known value available for resilient UI, but never use stale metadata to bypass execution checks.
+
+<CardGroup cols={2}>
+  <Card title="Monitor token activity" icon="radar" href="/guides/monitor-tokens">Build a resilient token monitoring loop.</Card>
+  <Card title="Quote a token" icon="magnifying-glass" href="/guides/quote-and-swap">Use mint addresses in a quote flow.</Card>
+</CardGroup>

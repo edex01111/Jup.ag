@@ -1,0 +1,41 @@
+---
+title: "Strategy and risk controls"
+description: "Make trading decisions explicit, bounded, and testable"
+---
+
+Keep the strategy independent from Jupiter execution. A strategy should return an intent; it should not hold keys or submit transactions.
+
+```ts
+type TradeIntent = {
+  inputMint: string
+  outputMint: string
+  amount: bigint
+  maxSlippageBps: number
+  reason: string
+}
+```
+
+## Risk gates
+
+Implement these checks before requesting a quote and again before signing:
+
+- Maximum notional per trade
+- Maximum aggregate exposure per token
+- Maximum daily loss
+- Minimum wallet balance reserve
+- Allowed mints and decimals
+- Maximum price impact and slippage
+- Cooldown after a fill or failure
+- Maximum transactions per minute
+
+## Idempotency
+
+Persist an intent ID before execution. If the worker restarts, look up the existing intent and transaction signature before creating a new one. Never infer success from a request timeout.
+
+## Backtesting and dry runs
+
+Run a strategy against historical or recorded quotes first. In dry-run mode, perform every step except signing and submission, while recording the route, expected output, and rejection reason.
+
+<Info>
+  A profitable backtest does not prove production profitability. Include fees, failed transactions, latency, slippage, and partial operational outages in your evaluation.
+</Info>
